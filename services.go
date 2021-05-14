@@ -31,8 +31,8 @@ func AssembleResponse(u string, body []byte) (URLInfo, error) {
 		info.AddHeading(h)
 	}
 	r, _ := ExtractTags("a", body)
-	for _, u := range r {
-		l, i, err := ParseLink(u, u)
+	for _, t := range r {
+		l, i, err := ParseLink(u, t)
 		if err == nil {
 			if i {
 				info.AddLink(l, true)
@@ -47,10 +47,6 @@ func AssembleResponse(u string, body []byte) (URLInfo, error) {
 
 // QueryURL takes a url and returns the HTML document body
 func QueryURL(u string) ([]byte, error) {
-	re := regexp.MustCompile("^(http://|https://)")
-	if !re.Match([]byte(u)) {
-		u = "https://" + u
-	}
 	_, err := url.ParseRequestURI(u)
 	if err != nil {
 		return []byte{}, errors.New("invalid url")
