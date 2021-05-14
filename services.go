@@ -18,7 +18,11 @@ func AssembleResponse(url string, body []byte) (URLInfo, error) {
 	info.Url = url
 	// Needs work
 	titleTag, _ := ExtractTags("title", body)
-	info.Title, _ = ParseTag("title", titleTag[0])
+	if len(titleTag) > 0 {
+		info.Title, _ = ParseTag("title", titleTag[0])
+	} else {
+		info.Title = "<Page has no title>"
+	}
 	info.HtmlVersion, _ = CheckHTMLVersion(body)
 
 	for i := 1; i <= 6; i++ {
@@ -30,8 +34,11 @@ func AssembleResponse(url string, body []byte) (URLInfo, error) {
 	for _, u := range r {
 		l, i, err := ParseLink(url, u)
 		if err == nil {
-			li := Link{l, i}
-			info.AddLink(li)
+			if i {
+				info.AddLink(l, true)
+			} else {
+				info.AddLink(l, false)
+			}
 		}
 	}
 	info.Login, _ = CheckForLogin(body)
@@ -48,13 +55,12 @@ func QueryURL(u string) ([]byte, error) {
 		Timeout: 30 * time.Second,
 	}
 
-	//TODO: investigate errors and handle
 	request, _ := http.NewRequest("GET", u, nil)
 	request.Header.Set("user-agent", "h24-assignment https://github.com/jvm986/h24-assignment"+
 		" - Checks for page contents of any given URL")
 	response, err := client.Do(request)
 	if err != nil {
-		log.Fatal(err)
+		return []byte{}, errors.New("error connecting to host")
 	}
 	defer response.Body.Close()
 
@@ -80,7 +86,7 @@ func ExtractTags(tag string, body []byte) ([]string, error) {
 // CheckHTMLVersion takes html body and returns the version
 // TODO: extend for responsive & do more research
 func CheckHTMLVersion(body []byte) (string, error) {
-	re := regexp.MustCompile("(?i)^<!DOCTYPE html>")
+	re := regexp.MustCompile("(?i)<!DOCTYPE html>")
 	if re.Match(body) {
 		return "HTML5", nil
 	}
@@ -95,10 +101,18 @@ func CheckForLogin(body []byte) (bool, error) {
 }
 
 // ParseLink takes a tag and extracts the url
-func ParseLink(url string, l string) (string, bool, error) {
-	r := regexp.MustCompile("(?i)href=\"(.*?)\"").FindStringSubmatch(l)
-	i := regexp.MustCompile(fmt.Sprintf("(?i)^(/|%v)", url)).MatchString(l)
+func ParseLink(u string, l string) (string, bool, error) {
+	r := regexp.MustCompile(`(?i)href="(.*?)"`).FindStringSubmatch(l)
 	if len(r) >= 2 {
+		i := regexp.MustCompile(`(?i)^\/`).MatchString(r[1])
+		if i {
+			r[1] = u + r[1]
+		}
+		i = regexp.MustCompile(fmt.Sprintf(`(?i)^%s`, u)).MatchString(r[1])
+		_, err := url.ParseRequestURI(r[1])
+		if err != nil {
+			return "", false, errors.New("invalid url")
+		}
 		return r[1], i, nil
 	}
 	return "", false, errors.New("invalid link")

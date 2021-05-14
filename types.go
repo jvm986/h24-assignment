@@ -15,8 +15,9 @@ type Heading struct {
 }
 
 type Link struct {
-	Url      string `json:"Url"`
-	Internal bool   `json:"internal"`
+	Link       string `json:"link"`
+	Internal   bool   `json:"internal"`
+	Accessible bool   `json:"accessible"`
 }
 
 // AddHeading appends a Heading to the URLInfo Slice
@@ -26,7 +27,7 @@ func (u *URLInfo) AddHeading(h Heading) []Heading {
 }
 
 // AddLink appends a Link to the URLInfo Slice
-func (u *URLInfo) AddLink(l Link) []Link {
-	u.Links = append(u.Links, l)
+func (u *URLInfo) AddLink(l string, internal bool) []Link {
+	u.Links = append(u.Links, Link{l, internal, false})
 	return u.Links
 }

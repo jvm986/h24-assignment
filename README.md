@@ -1,4 +1,4 @@
-# H-24 Assignment
+# H24 Assignment
 
 Very work in progress, you can currently spin the server up with:
 
@@ -6,14 +6,23 @@ Very work in progress, you can currently spin the server up with:
 
 ## Assumptions
 
-Inaccessible links need to be tested
-An ideal solution uses the standard library
+- Inaccessible links need to be tested
+- An ideal solution uses the standard library
+- The link checking is handled by the client to some degree, rather than putting this on the backend and implementing a queuing service like redis
+
+## Limitations
+
+- Only works on server-side rendered pages, SPAs would require a web driver or JS interpereter
+- No security or rate limiting
 
 ## TODO
 
 - Implement Docker & CI
-- Improve Handling of Errors
+- Improve Handling of Errors (e.g. rate limiting from external sites breaks assemble)
 - Extend Test Coverage
+- Clean up links - remove duplicates and non-url
+- Handle encoding issue with title (&amp;)
+- Handle missing http:// at start of url and subdomains
 
 ---
 
