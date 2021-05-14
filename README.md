@@ -12,9 +12,13 @@ Run the server on port 8000
 
 ## Assumptions
 
-- Inaccessible links need to be tested
-- The link checking is handled by the client to some degree, rather than putting this on the backend and implementing a queuing service like redis
+- Inaccessible links need to be checked
 - An ideal solution only uses the standard library
+- The complexity of the project should refelct the complexity of the requirements
+
+## Notes
+
+The primary concern of the app is how to handle link checking. This process cannot be handled in the scope of a normal http request because there is no limit to the time it might take. The user should also be delivered _some_ result once the inital url is checked. In order to handle this on the backend, redis (or similar) could be implemented, however the best solution to this problem is to handle the iterations on the frontend.
 
 ## Limitations
 
@@ -26,6 +30,9 @@ Run the server on port 8000
 - Improve Handling of Errors (e.g. rate limiting from external sites breaks assemble)
 - Extend Test Coverage
 - Clean up links - remove duplicates and non-url
+- Deployment
+- Implement web toolkit (e.g gorilla)
+- Logging
 
 ---
 
