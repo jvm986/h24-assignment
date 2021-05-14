@@ -26,8 +26,6 @@ Run the server on port 8000
 - Improve Handling of Errors (e.g. rate limiting from external sites breaks assemble)
 - Extend Test Coverage
 - Clean up links - remove duplicates and non-url
-- Handle encoding issue with titles (\&amp;)
-- Handle missing protocol and subdomains in url submission
 
 ---
 

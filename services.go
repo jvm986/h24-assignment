@@ -13,9 +13,9 @@ import (
 
 // AssembleResponse generates the response slice for processing by the server
 // TODO: Handle Errors -- embed in struct?
-func AssembleResponse(url string, body []byte) (URLInfo, error) {
+func AssembleResponse(u string, body []byte) (URLInfo, error) {
 	info := URLInfo{}
-	info.Url = url
+	info.Url = u
 	// Needs work
 	titleTag, _ := ExtractTags("title", body)
 	if len(titleTag) > 0 {
@@ -32,7 +32,7 @@ func AssembleResponse(url string, body []byte) (URLInfo, error) {
 	}
 	r, _ := ExtractTags("a", body)
 	for _, u := range r {
-		l, i, err := ParseLink(url, u)
+		l, i, err := ParseLink(u, u)
 		if err == nil {
 			if i {
 				info.AddLink(l, true)
@@ -47,6 +47,10 @@ func AssembleResponse(url string, body []byte) (URLInfo, error) {
 
 // QueryURL takes a url and returns the HTML document body
 func QueryURL(u string) ([]byte, error) {
+	re := regexp.MustCompile("^(http://|https://)")
+	if !re.Match([]byte(u)) {
+		u = "https://" + u
+	}
 	_, err := url.ParseRequestURI(u)
 	if err != nil {
 		return []byte{}, errors.New("invalid url")
@@ -108,7 +112,7 @@ func ParseLink(u string, l string) (string, bool, error) {
 		if i {
 			r[1] = u + r[1]
 		}
-		i = regexp.MustCompile(fmt.Sprintf(`(?i)^%s`, u)).MatchString(r[1])
+		i = regexp.MustCompile(fmt.Sprintf(`(?i)%s`, u)).MatchString(r[1])
 		_, err := url.ParseRequestURI(r[1])
 		if err != nil {
 			return "", false, errors.New("invalid url")
