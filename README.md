@@ -1,14 +1,20 @@
 # H24 Assignment
 
-Very work in progress, you can currently spin the server up with:
+H24 Assignment is a web app which takes a url and displays information about the document, as per the assignment requirements detailed below.
 
-    go run main.go api.go services.go types.go
+Build the docker image
+
+    docker build -t h24-assignment .
+
+Run the server on port 8000
+
+    docker run --rm -p 8000:8000 h24-assignment
 
 ## Assumptions
 
 - Inaccessible links need to be tested
-- An ideal solution uses the standard library
 - The link checking is handled by the client to some degree, rather than putting this on the backend and implementing a queuing service like redis
+- An ideal solution only uses the standard library
 
 ## Limitations
 
@@ -17,12 +23,11 @@ Very work in progress, you can currently spin the server up with:
 
 ## TODO
 
-- Implement Docker & CI
 - Improve Handling of Errors (e.g. rate limiting from external sites breaks assemble)
 - Extend Test Coverage
 - Clean up links - remove duplicates and non-url
-- Handle encoding issue with title (&amp;)
-- Handle missing http:// at start of url and subdomains
+- Handle encoding issue with titles (\&amp;)
+- Handle missing protocol and subdomains in url submission
 
 ---
 
@@ -45,7 +50,7 @@ about the contents of the page:
 Submit the assignment
 
 1. Create a public GitHub repository and commit code in it
-2. Provide a README.md in GitHub repository with instructions on how to run the
-   application
+2. Provide a README.md in GitHub repository with instructions on how to run the application
 3. Send us the GitHub’s link to the repository
-   Good luck!
+
+Good luck!
