@@ -37,9 +37,13 @@ To this end the app is seperated, with the golang backend serving the static fil
 - Stored Logging
 - Deployment
 
+## Example
+
+![Example](https://i.imgur.com/ss2JfJI.png)
+
 ---
 
-_Original Task Requirements:_
+_Original Requirements:_
 
 ## Golang Technical Challenge
 
