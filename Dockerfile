@@ -8,6 +8,6 @@ FROM alpine
 RUN adduser -S -D -H -h /app appuser
 USER appuser
 COPY --from=builder /build/h24-assignment /app/
-COPY frontend/ /app/frontend
+COPY frontend/build /app/frontend/build
 WORKDIR /app
 CMD ["./h24-assignment"]

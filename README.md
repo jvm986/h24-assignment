@@ -20,6 +20,8 @@ Run the server on port 8000
 
 The primary concern of the app is how to handle link checking. This process cannot be handled in the scope of a normal http request because there is no limit to the time it might take. The user should also be delivered _some_ result once the inital url is checked. In order to handle this on the backend, redis (or similar) could be implemented, however the best solution to this problem is to handle the iterations on the frontend.
 
+To this end the app is seperated, with the golang backend serving the static files of the SPA and a single api endpoint - `/url` - which responds with the basic url information including the list of links to be tested. The frontend takes the user input and hits `/url`, displaying the basic information. It _then_ hits the same endpoint for each link to test it's accessibility, giving the user feedback as to the progress.
+
 ## Limitations
 
 - Only works on server-side rendered pages, SPAs would require a web driver or JS interpereter
@@ -28,11 +30,12 @@ The primary concern of the app is how to handle link checking. This process cann
 ## TODO
 
 - Improve Handling of Errors (e.g. rate limiting from external sites breaks assemble)
-- Extend Test Coverage
-- Clean up links - remove duplicates and non-url
-- Deployment
+- Extend test coverage to api
+- Extent test cases for services
+- Clean up links (remove duplicates)
 - Implement web toolkit (e.g gorilla)
-- Logging
+- Stored Logging
+- Deployment
 
 ---
 

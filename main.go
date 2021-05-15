@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	fs := http.FileServer(http.Dir("./frontend"))
+	fs := http.FileServer(http.Dir("./frontend/build"))
 	http.Handle("/", fs)
 	http.HandleFunc("/url", URLHandler)
 	fmt.Println("Serving on localhost port 8000... ")

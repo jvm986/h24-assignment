@@ -19,6 +19,7 @@ func URLHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	body, err := QueryURL(u)
 	if err != nil {
+		fmt.Printf("Failed to process: %s\n", err)
 		w.WriteHeader(400)
 		return
 	}
